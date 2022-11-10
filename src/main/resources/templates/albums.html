@@ -7,9 +7,40 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
-<body>
+<main style="text-align: center">
+<body style="background-color: LightGray">
 <h1>Top Three Albums</h1>
-<span th:text="${albumString}"></span>
+<span th:each="album: ${albumList}">
+    <p th:text = "${album.title}"></p>
+    <ul th:each = "song: ${album.songList}">
+        <li th:text="${song.title}"/>
+    <li th:text="${song.numTrack}"/>
+    <li th:text="${song.album}"/>
+    </ul>
+    <form action="/songs" method="post">
+    <fieldset>
+        <input type="text" name="title">
+        <input type="number" name="lengthSong">
+        <input type="number" name="numTrack">
+        <input type="text" name="newAlb">
+        <input type="hidden" name="album" th:value="${album.title}">
+        <input type="submit">
+    </fieldset>
+</form>
+
+</span>
+<form action="/albums" method="post">
+    <fieldset>
+        <input type="text" name="title">
+        <input type="text" name="artist">
+        <input type="number" name="songCount">
+        <input type="number" name="lengthInSeconds">
+        <input type="text" name="imageURL">
+        <input type="submit">
+    </fieldset>
+</form>
+
 
 </body>
+</main>
 </html>

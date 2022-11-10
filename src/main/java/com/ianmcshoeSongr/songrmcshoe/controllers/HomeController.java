@@ -1,14 +1,21 @@
 package com.ianmcshoeSongr.songrmcshoe.controllers;
 
+import com.ianmcshoeSongr.songrmcshoe.Repositories.Albumrepo;
 import com.ianmcshoeSongr.songrmcshoe.models.Album;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.List;
 
 @Controller
 public class HomeController {
     // home route
     // old way
+    @Autowired
+    Albumrepo albumrepo;
     @RequestMapping(value = "/", method = RequestMethod.GET)
     @ResponseBody
     public String getHome() {
@@ -36,10 +43,18 @@ public class HomeController {
 
     @GetMapping("/albums")
     public String getThreeAlbums(Model m) {
-        String albumString = threeAlbums();
-
-        m.addAttribute("albumString", albumString);
+//        String albumString = threeAlbums();
+        List<Album> oldAlb = albumrepo.findAll();
+        m.addAttribute("albumList", oldAlb);
         return "albums";
+    }
+    @PostMapping("/albums")
+    public RedirectView postAlbums(String title, String artist, String songCount, String lengthInSeconds, String imageURL) {
+        int countSong = (int) Integer.parseInt(songCount);
+        int songLength = (int) Integer.parseInt(lengthInSeconds);
+        Album album = new Album(title,artist,countSong,songLength,imageURL);
+        albumrepo.save(album);
+        return new RedirectView("/albums");
     }
 
     private String threeAlbums() {
